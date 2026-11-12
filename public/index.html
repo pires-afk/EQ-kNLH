@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#080808">
+  <title>EQ KNLH — Visualizador remoto</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div class="brand-mark">EQ</div>
+      <div>
+        <h1>EQ KNLH</h1>
+        <p>REMOTE SCREEN VIEWER</p>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="orb"><span>▣</span></div>
+      <h2>Veja outra tela.<br><em>Com autorização.</em></h2>
+      <p>Crie uma sessão privada e compartilhe um link. A transmissão só começa quando a outra pessoa autoriza no navegador.</p>
+    </section>
+
+    <section class="panel">
+      <button id="create" class="primary">CRIAR LINK <span>↗️</span></button>
+
+      <div id="result" class="result hidden">
+        <label>LINK PARA QUEM VAI COMPARTILHAR A TELA</label>
+        <div class="linkline">
+          <input id="shareLink" readonly>
+          <button data-copy="shareLink">COPIAR</button>
+        </div>
+
+        <label>LINK PARA VOCÊ VISUALIZAR</label>
+        <div class="linkline">
+          <input id="viewLink" readonly>
+          <button data-copy="viewLink">COPIAR</button>
+        </div>
+
+        <p class="hint">Envie o primeiro link para o aparelho que compartilhará a tela. Abra o segundo no seu aparelho.</p>
+      </div>
+
+      <p id="error" class="error" role="status"></p>
+    </section>
+
+    <footer>
+      <span>EQ KNLH · PROTÓTIPO 0.1</span>
+      <span>SESSÕES autorizadas</span>
+    </footer>
+  </main>
+
+  <script>
+    const create = document.querySelector("#create");
+
+    create.addEventListener("click", async () => {
+      create.disabled = true;
+      create.textContent = "CRIANDO...";
+      document.querySelector("#error").textContent = "";
+
+      try {
+        const response = await fetch("/api/rooms", {
+          method: "POST"
+        });
+
+        if (!response.ok) {
+          throw new Error("Não foi possível criar a sessão.");
+        }
+
+        const data = await response.json();
+        const base = location.origin;
+
+        document.querySelector("#shareLink").value = base + data.shareUrl;
+        document.querySelector("#viewLink").value = base + data.viewUrl;
+        document.querySelector("#result").classList.remove("hidden");
+
+      } catch (e) {
+        document.querySelector("#error").textContent =
+          e.message + " Verifique se o servidor está ativo.";
+      } finally {
+        create.disabled = false;
+        create.innerHTML = 'CRIAR LINK <span>↗️</span>';
+      }
+    });
+
+    document.querySelectorAll("[data-copy]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const input = document.getElementById(btn.dataset.copy);
+
+        try {
+          await navigator.clipboard.writeText(input.value);
+          btn.textContent = "COPIADO";
+        } catch {
+          input.select();
+          document.execCommand("copy");
+          btn.textContent = "COPIADO";
+        }
+
+        setTimeout(() => btn.textContent = "COPIAR", 1600);
+      });
+    });
+  </script>
+</body>
+</html>
