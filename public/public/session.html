@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#080808">
+  <title>Sessão — EQ KNLH</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="shell session-shell">
+    <header>
+      <a class="back" href="/">←</a>
+      <div class="brand-mark small">EQ</div>
+      <div>
+        <h1>EQ KNLH</h1>
+        <p>SESSÃO REMOTA</p>
+      </div>
+    </header>
+    <section class="panel session-panel">
+      <div class="status-dot"></div>
+      <p id="status" class="status">Preparando sessão segura…</p>
+      <div id="shareControls" class="hidden">
+        <h2>Compartilhar esta tela</h2>
+        <p>Ao continuar, o navegador exibirá a solicitação de compartilhamento. Escolha o conteúdo que deseja transmitir e confirme. A transmissão ficará visível enquanto estiver ativa.</p>
+        <button id="start" class="primary">PERMITIR E COMPARTILHAR</button>
+      </div>
+      <div id="viewControls" class="hidden">
+        <h2>Aguardando transmissão</h2>
+        <p>Quando a outra pessoa autorizar e iniciar o compartilhamento, a tela aparecerá abaixo.</p>
+        <video id="remoteVideo" autoplay playsinline controls></video>
+      </div>
+      <button id="stop" class="secondary hidden">ENCERRAR SESSÃO</button>
+      <p id="message" class="hint"></p>
+    </section>
+    <footer>
+      <span>EQ KNLH · PROTÓTIPO 0.1</span>
+      <span>LINK PRIVADO</span>
+    </footer>
+  </main>
+  <script src="/session.js"></script>
+</body>
+</html>
